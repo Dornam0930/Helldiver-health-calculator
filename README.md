@@ -1,0 +1,2 @@
+This will download data from https://github.com/zeddidragon/helldivers-calc/blob/main/data/ on first run
+Then it collates the data and displays it in a web page with drop down menus for calculating damage vs helldivers

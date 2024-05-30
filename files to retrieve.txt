@@ -1,0 +1,3 @@
+#files that will be downloaded on first run and when the updata data button is pressed
+armor-values.csv
+weapons.json
