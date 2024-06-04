@@ -10,9 +10,14 @@ def import_files():
             raise Exception(f"{file} is not a valid file type")
         if file_type[1] == ".csv":
             armor_values = convert_csv_to_dict(file)
+            armors = []
+            for armor in armor_values:
+                if armor[-1] == "V":
+                    break
+                armors.append(armor)
         if file_type[1] == ".json":
             weapons = convert_json_to_dict(file)
-    return armor_values, weapons
+    return armor_values, armors, weapons
 
 def check_file_type(file):
     return os.path.splitext(file)
@@ -41,7 +46,6 @@ def convert_csv_to_dict(csv_file):
         file_list_of_dicts = csv.DictReader(csv_file)
         vitality = False
         for line in file_list_of_dicts:
-            print(line)
             if line["Armor"] == "w/Vitality":
                 vitality = True
                 continue
