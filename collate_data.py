@@ -1,5 +1,7 @@
 import json, os, csv
 from data_check import data_dir, file_path
+from calculate import hitboxes
+from decimal import Decimal
 valid_file_types = [".csv", ".json"]
 
 def import_files():
@@ -16,12 +18,15 @@ def import_files():
                     break
                 armors.append(armor)
         if file_type[1] == ".json":
-            weapons = convert_json_to_dict(file)
-    return armor_values, armors, weapons
+            helldivers = convert_json_to_dict(file)
+        terminids = {"term_placeholder1" : {"attack1" : 10, "attack2" : 20}}
+        automatons = {"auto_placeholder1" : {"attack1" : 10, "attack2" : 20}}
+    return armor_values, armors, helldivers, terminids, automatons
 
 def check_file_type(file):
     return os.path.splitext(file)
 
+# opens a json file and passes it to convert_list_to_dict
 def convert_json_to_dict(file):
     path = file_path(data_dir, file)
     with open(path) as json_file:
@@ -46,11 +51,19 @@ def convert_csv_to_dict(csv_file):
         file_list_of_dicts = csv.DictReader(csv_file)
         vitality = False
         for line in file_list_of_dicts:
+            line_copy = convert_strings_to_floats(line)
             if line["Armor"] == "w/Vitality":
                 vitality = True
                 continue
             if vitality == False:
-                dict_of_dicts[line["Armor"]] = line
-            else:
-                dict_of_dicts[f'{line["Armor"]}V'] = line
+                dict_of_dicts[line["Armor"]] = line_copy
+                dict_of_dicts[f'{line["Armor"]}V'] = line_copy
     return dict_of_dicts
+
+def convert_strings_to_floats(line):
+    if line[hitboxes[1]] == hitboxes[1]:
+         return line
+    line_copy = line
+    for hitbox in hitboxes:
+        line_copy[hitbox] = float(Decimal(line_copy[hitbox].rstrip("%")) / 100)
+    return line_copy
