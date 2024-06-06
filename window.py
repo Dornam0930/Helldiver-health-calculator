@@ -3,13 +3,17 @@ from tkinter import ttk
 from calculate import calc_all_damage
 
 factions = ["Helldivers", "Terminids", "Automatons"]
-
+damage_label_list = []
 
 # creates a new window
 def new_window(armors, armor_values, helldivers):
     window = Tk()
     window.title("Helldiver health calculator")
     window.geometry("1280x720")
+    input_ui = Frame(window, cursor='hand2', height=100, width=200)
+    input_ui["bg"] = "black"
+    input_ui.grid(row=4, column=4)
+
 
     armor_select_label = ttk.Label(window, text="armors:")
     armor_select_label.grid(row=0, column=0, pady=3)
@@ -100,12 +104,24 @@ def make_attack_grid(window, faction, helldivers, weapon, armor_values, armor):
 
         damage = helldivers[weapon].get("damage")
         explosive_damage = helldivers[weapon].get("xdamage")
-        print(explosive_damage)
         explosive_value = ttk.Label(window, text=f"Exp: {explosive_damage}", width=10)
         explosive_value.grid(row=2, column=4, pady=1)
 
         # TODO: pipe the damage & remaining hp into the grid for displaying in GUI
         damage_list, damage_listv, remaining_hp, remaining_hpv = calc_all_damage(damage, explosive_damage, armor_values, armor)
+        for i in range(7):
+            if damage_list[i] == "N/A":
+                damage_label_list.append(ttk.Label(window, text=damage_list[i]))
+            else:
+                damage_label_list.append(ttk.Label(window, text=f"{damage_list[i]}/{remaining_hp[i]}"))
+            damage_label_list[i].grid(row=2, column=5 + i, pady=1)
+        for i in range(7):
+            if damage_listv[i] == "N/A":
+                damage_label_list.append(ttk.Label(window, text=damage_listv[i]))
+            else:
+                damage_label_list.append(ttk.Label(window, text=f"{damage_listv[i]}/{remaining_hpv[i]}"))
+            damage_label_list[i + 7].grid(row=6, column=5 + i, pady=1)
+
         print(damage_list)
         print(damage_listv)
         print(remaining_hp)
