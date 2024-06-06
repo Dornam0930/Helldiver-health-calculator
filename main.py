@@ -13,11 +13,16 @@ def main():
     # import data from files
     armor_values, armors, helldivers, terminids, automatons = import_files()
     # create window
-    window, armor_select, faction_select, weapon_select = new_window(armors, armor_values, helldivers)
+    (window,
+     armor_select,
+     faction_select,
+     weapon_select,
+     input_ui,
+     output_ui) = new_window(armors, armor_values, helldivers)
     armor_select.current(0)
     faction_select.current(0)
     weapon_select.current(0)
-    make_attack_grid(window, factions[0], helldivers, weapon_select.get(), armor_values, armor_select.get())
+    make_attack_grid(output_ui, factions[0], helldivers, weapon_select.get(), armor_values, armor_select.get())
 
     # TODO: make these functions actually change child comboboxes or displayed data
     # Don't forget to modify combobox grid size if needed

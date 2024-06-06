@@ -57,6 +57,7 @@ def convert_csv_to_dict(csv_file):
                 continue
             if vitality == False:
                 dict_of_dicts[line["Armor"]] = line_copy
+            else:
                 dict_of_dicts[f'{line["Armor"]}V'] = line_copy
     return dict_of_dicts
 
