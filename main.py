@@ -4,7 +4,7 @@ from tkinter import ttk
 from data_check import data_check, data_dir
 from collate_data import import_files
 from calculate import func2 # placeholder till math functions are coded
-from window import new_window, make_attack_grid, factions
+from window import new_window, make_attack_grid, modify_attack_grid, factions, damage_label_list
 
 
 def main():
@@ -28,12 +28,14 @@ def main():
     # Don't forget to modify combobox grid size if needed
     def choose_new_armor(self):
         print(armor_select.get())
+        modify_attack_grid(output_ui, factions[0], helldivers, weapon_select.get(), armor_values, armor_select.get())
 
     def choose_new_faction(self):
         faction = faction_select.get()
         print(faction)
         if faction == factions[0]:
             weapon_select["values"] = list(helldivers)
+            modify_attack_grid(output_ui, factions[0], helldivers, weapon_select.get(), armor_values, armor_select.get())
         elif faction == factions[1]:
             weapon_select["values"] = list(terminids)
         elif faction == factions[2]:
@@ -42,7 +44,7 @@ def main():
 
     def choose_new_weapon(self):
         print(weapon_select.get())
-        make_attack_grid(window, faction_select.get(), helldivers, weapon_select.get(), armor_values, armor_select.get())
+        modify_attack_grid(output_ui, factions[0], helldivers, weapon_select.get(), armor_values, armor_select.get())
 
     armor_select.bind("<<ComboboxSelected>>", choose_new_armor)
     faction_select.bind("<<ComboboxSelected>>", choose_new_faction)

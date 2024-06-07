@@ -4,6 +4,7 @@ from calculate import calc_all_damage
 
 factions = ["Helldivers", "Terminids", "Automatons"]
 damage_label_list = []
+attack_labels = []
 
 # creates a new window
 def new_window(armors, armor_values, helldivers):
@@ -103,13 +104,16 @@ def make_attack_grid(frame, faction, helldivers, weapon, armor_values, armor):
         attack_type = ttk.Label(frame, text=weapon, width=30)
         attack_type.grid(row=1, column=3, pady=3)
 
-        attack_value = ttk.Label(frame, text=helldivers[weapon]["damage"], width=10)
-        attack_value.grid(row=1, column=4, pady=3)
-
         damage = helldivers[weapon].get("damage")
         explosive_damage = helldivers[weapon].get("xdamage")
+
+        attack_value = ttk.Label(frame, text=f"Reg: {damage}", width=10)
+        attack_value.grid(row=1, column=4, pady=3)
+
         explosive_value = ttk.Label(frame, text=f"Exp: {explosive_damage}", width=10)
         explosive_value.grid(row=2, column=4, pady=1)
+
+        attack_labels.extend([attack_type, attack_value, explosive_value])
 
         # TODO: pipe the damage & remaining hp into the grid for displaying in GUI
         damage_list, damage_listv, remaining_hp, remaining_hpv = calc_all_damage(damage, explosive_damage, armor_values, armor)
@@ -126,15 +130,23 @@ def make_attack_grid(frame, faction, helldivers, weapon, armor_values, armor):
                 damage_label_list.append(ttk.Label(frame, text=f"{damage_listv[i]}/{remaining_hpv[i]}"))
             damage_label_list[i + 7].grid(row=6, column=5 + i, pady=1)
 
-        print(damage_list)
-        print(damage_listv)
-        print(remaining_hp)
-        print(remaining_hpv)
+def modify_attack_grid(output_ui, faction, attacks_list, weapon, armor_values, armor):
+    damage = attacks_list[weapon].get("damage")
+    explosive_damage = attacks_list[weapon].get("xdamage")
 
-        
-        
+    attack_labels[0].configure(text=weapon)
+    attack_labels[1].configure(text=f"Reg: {damage}")
+    attack_labels[2].configure(text=f"Exp: {explosive_damage}")
 
-def fill_attack_values():
-    pass
-
+    damage_list, damage_listv, remaining_hp, remaining_hpv = calc_all_damage(damage, explosive_damage, armor_values, armor)
     
+    for i in range(7):
+        if damage_list[i] == "N/A":
+            damage_label_list[i].configure(text=damage_list[i])
+        else:
+            damage_label_list[i].configure(text=f"{damage_list[i]}/{remaining_hp[i]}")
+    for i in range(7):
+        if damage_listv[i] == "N/A":
+            damage_label_list[i+7].configure(text=damage_listv[i])
+        else:
+            damage_label_list[i+7].configure(text=f"{damage_listv[i]}/{remaining_hpv[i]}")
